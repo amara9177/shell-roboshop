@@ -41,31 +41,42 @@ if [ $? -ne 0 ];then
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop  &>>$LOG_FILE
     VALIDATE $? "Creating system user"
 else
-    echo "user already exist... $Y SKIPPING $N"
+    echo -e "user already exist... $Y SKIPPING $N"
 fi
 
 mkdir -p /app 
 VALIDATE $? "Creating app directory"
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip  &>>$LOG_FILE
 VALIDATE $? "Downloading catalogue application"
+
+rm -rf /app/*
+VALIDATE $? "Removing existing code"
+
 cd /app
 VALIDATE $? "changing app directory"
+
 unzip /tmp/catalogue.zip  &>>$LOG_FILE
 VALIDATE $? "Unzip catalogue"
+
 npm install  &>>$LOG_FILE
 VALIDATE $? "install dependencies"
+
 cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
 VALIDATE $? "copy systemctl service"
+
 systemctl daemon-reload
 systemctl enable catalogue  &>>$LOG_FILE
 VALIDATE $? "Enable catalogue"
 
 cp mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "Copy mongo repo"
+
 dnf install mongodb-mongosh -y  &>>$LOG_FILE
 VALIDATE $? "install mongoDB client"
+
 mongosh --host $MONGODB_HOST </app/db/master-data.js &>>$LOG_FILE
-VALIDATE $? "Load catalogue products"   
+VALIDATE $? "Load catalogue products"
+
 systemctl restart catalogue
 VALIDATE $? "restarted catalogue"
 
