@@ -8,6 +8,7 @@ N="\e[37m"
 
 LOGS_FOLDER="/var/log/shell-roboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1)
+SCRIPT_DIR=$PWD
 MONGODB_HOST=mongodb.kaws86s.shop
 LOG_FILE=$LOGS_FOLDER/$SCRIPT_NAME.log
 
@@ -33,12 +34,13 @@ VALIDATE $? "disabling nodejs"
 dnf module enable nodejs:20 -y &>>$LOG_FILE
 VALIDATE $? "enabling nodejs"
 dnf install nodejs -y  &>>$LOG_FILE
-validate $? "installing nodejs"
+VALIDATE $? "installing nodejs"
 
 useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop  &>>$LOG_FILE
 VALIDATE $? "Creating system user"
 
 mkdir /app 
+VALIDATE $? "Creating app directory"
 
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip  &>>$LOG_FILE
 VALIDATE $? "Downloading catalogue application"
@@ -51,7 +53,7 @@ VALIDATE $? "Unzip catalogue"
 
 npm install  &>>$LOG_FILE
 VALIDATE $? "install dependences"
-cp catalogue.service /etc/systemd/system/catalogue.service
+cp $SCRIPT_DIR/catalogue.service/etc/systemd/system/catalogue.service
 VALIDATE $? "copy systemctl service"
 systemctl daemon-reload
 systemctl enable catalogue  &>>$LOG_FILE
@@ -61,7 +63,7 @@ cp mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "Copy mongo repo"
 dnf install mongodb-mongosh -y  &>>$LOG_FILE
 VALIDATE $? "install mongoDB client"
-mongosh --host $MONGODB_HOST </app/db/master-data.js
+mongosh --host $MONGODB_HOST </app/db/master-data.js &>>$LOG_FILE
 VALIDATE $? "Load catalogue products"   
 systemctl restart catalogue
 VALIDATE $? "restarted catalogue"
