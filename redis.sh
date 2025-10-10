@@ -10,6 +10,7 @@ LOGS_FOLDER="/var/log/shell-roboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1)
 SCRIPT_DIR=$PWD
 MONGODB_HOST=mongodb.kaws86s.shop
+START_TIME=$(date +s%)
 LOG_FILE=$LOGS_FOLDER/$SCRIPT_NAME.log
 
 mkdir -p $LOGS_FOLDER
@@ -23,6 +24,7 @@ fi
 VALIDATE(){ #functions recieve inputs through orgs just like shell script
     if [ $1 -ne 0 ];then
         echo -e "  $2...$R Failure $N" | tee -a $LOG_FILE
+        exit 1
     else
         echo -e "  $2...$G Success $N" | tee -a $LOG_FILE
     fi
@@ -47,6 +49,6 @@ systemctl start redis
 VALIDATE $? "starting Redis" 
 
 END_TIME=$(date +%s)
-TOTAL_TIME=$(($END_TIME - $START_TIME))
+TOTAL_TIME=$(( $END_TIME - $START_TIME ))
 echo -e "Script executed in: $Y $TOTAL_TIME seconds $N"
 
