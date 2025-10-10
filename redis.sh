@@ -8,7 +8,7 @@ N="\e[37m"
 USERID=$(id -u)
 LOGS_FOLDER="/var/log/shell-roboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1)
-LOG_FILE=$LOGS_FOLDER/$SCRIPT_NAME.log
+LOG_FILE=$LOGS_FOLDER/$SCRIPT_NAME.log #/var/log/shell-roboshop/redis.sh.log
 
 mkdir -p $LOGS_FOLDER
 echo "script started executed at: $(date)" | tee -a $LOG_FILE
@@ -28,18 +28,20 @@ VALIDATE(){
 }
 
 dnf module disable redis -y &>>$LOG_FILE
-VALIDATE "disabling redis"
+VALIDATE  "Disabling default redis"
 
 dnf module enable redis:7 -y &>>$LOG_FILE
-VALIDATE "enabling redis"
+VALIDATE "Enabling Redis 7"
 
 dnf install redis -y &>>$LOG_FILE
-VALIDATE "installing redis"
+VALIDATE "installing Redis"
+
+sed -i -e 's/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c protected-mode no' /etc/redis/redis.conf
+VALIDATE "Allowing Remote connections to redis"
 
 systemctl enable redis &>>$LOG_FILE
-VALIDATE "Enabling redis"
+VALIDATE "Enabling Redis"
 
 systemctl start redis &>>$LOG_FILE
 VALIDATE "Redis started"
 
-sed -i -e 's/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c /protected-mode no/' /etc/redis/redis.conf
