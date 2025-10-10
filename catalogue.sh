@@ -49,11 +49,11 @@ VALIDATE $? "Creating app directory"
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip  &>>$LOG_FILE
 VALIDATE $? "Downloading catalogue application"
 
-rm -rf /app/*
-VALIDATE $? "Removing existing code"
-
 cd /app
 VALIDATE $? "changing app directory"
+
+rm -rf /app/*
+VALIDATE $? "Removing existing code"
 
 unzip /tmp/catalogue.zip  &>>$LOG_FILE
 VALIDATE $? "Unzip catalogue"
@@ -68,7 +68,7 @@ systemctl daemon-reload
 systemctl enable catalogue  &>>$LOG_FILE
 VALIDATE $? "Enable catalogue"
 
-cp mongo.repo /etc/yum.repos.d/mongo.repo
+cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "copy mongo repo"
 
 dnf install mongodb-mongosh -y  &>>$LOG_FILE
