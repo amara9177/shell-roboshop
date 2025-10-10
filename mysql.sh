@@ -29,30 +29,14 @@ VALIDATE(){ #functions recieve inputs through orgs just like shell script
         echo -e "  $2...$G Success $N" | tee -a $LOG_FILE
     fi
 }
+ dnf install mysql-server -y
+ VALIDATE $? "Installing mysql server"
 
-dnf module disable redis -y
-VALIDATE $? "Disaling default Redis"
+ systemctl enable mysqld
+ VALIDATE $? "enabling mysql"
 
-dnf module enable redis:7 -y
-VALIDATE $? "Enabling Redis 7"
+systemctl start mysqld
+VALIDATE $? "started mysql"  
 
-dnf install redis -y 
-VALIDATE $? "installing redis"
-
-sed -i -e 's/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c protected-mode no' /etc/redis/redis.conf
-VALIDATE $? "Allowing remote connections to Redis"
-
-systemctl enable redis
-VALIDATE $? "Enabling Redis"
-
-systemctl start redis
-VALIDATE $? "starting Redis" 
-
-END_TIME=$(date +%s)
-TOTAL_TIME=$(( $END_TIME - $START_TIME ))
-echo -e "Script executed in: $Y $TOTAL_TIME seconds $N"
-
-END_TIME=$(date +%s)
-TOTAL_TIME=$(( $END_TIME - $START_TIME ))
-echo -e "Script executed in: $Y $TOTAL_TIME seconds $N"
-
+mysql_secure_installation --set-root-pass RoboShop@1
+VALIDATE $? "setting up root password"
