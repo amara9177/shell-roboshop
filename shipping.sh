@@ -43,8 +43,8 @@ fi
 
 mkdir -p /app 
 VALIDATE $? "Creating app directory"
-curl -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shippingue-v3.zip  &>>$LOG_FILE
-VALIDATE $? "Downloading shippingue application"
+curl -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip  &>>$LOG_FILE
+VALIDATE $? "Downloading shipping application"
 
 cd /app
 VALIDATE $? "changing app directory"
