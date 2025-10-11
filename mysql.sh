@@ -33,10 +33,10 @@ VALIDATE(){ #functions recieve inputs through orgs just like shell script
  VALIDATE $? "Installing mysql server"
 
  systemctl enable mysqld &>>$LOG_FILE
- VALIDATE $? "enabling mysql"
+ VALIDATE $? "enabling mysql server"
 
 systemctl start mysqld &>>$LOG_FILE
-VALIDATE $? "started mysql"  
+VALIDATE $? "started mysql server"  
 
 mysql_secure_installation --set-root-pass RoboShop@1 &>>$LOG_FILE
 VALIDATE $? "setting up root password"
