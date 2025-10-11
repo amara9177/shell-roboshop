@@ -51,8 +51,8 @@ VALIDATE $? "changing app directory"
 rm -rf /app/* &>>$LOG_FILE
 VALIDATE $? "Removing existing code"
 
-unzip /tmp/shipping.zip  &>>$LOG_FILE
-VALIDATE $? "Unzip shipping"
+unzip /tmp/payment.zip  &>>$LOG_FILE
+VALIDATE $? "unzip payment "
 
 pip3 install -r requirements.txt &>>$LOG_FILE
 VALIDATE $? "installing dependencies"
