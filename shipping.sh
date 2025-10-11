@@ -69,7 +69,7 @@ VALIDATE $? "Enabling shipping"
 systemctl start shipping &>>$LOG_FILE
 VALIDATE $? "Started shipping"
 
-mysql -h mysql.kaws86s.shop -uroot -pRoboShop@1 -e 'use cities'
+mysql -h $MYSQL_HOST -uroot -pRoboShop@1 -e 'use cities'
 if [ $? -ne 0 ];then
     mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/schema.sql
     mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/app-user.sql 
