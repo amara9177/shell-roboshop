@@ -30,17 +30,17 @@ VALIDATE(){ #functions recieve inputs through orgs just like shell script
     fi
 }
 
-dnf module disable redis -y
+dnf module disable redis -y &>>$LOG_FILE
 VALIDATE $? "Disaling default Redis"
 
-dnf module enable redis:7 -y
+dnf module enable redis:7 -y &>>$LOG_FILE
 VALIDATE $? "Enabling Redis 7"
 
-dnf install redis -y 
+dnf install redis -y &>>$LOG_FILE
 VALIDATE $? "installing redis"
 
-sed -i -e 's/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c protected-mode no' /etc/redis/redis.conf
-VALIDATE $? "Allowing remote connections to Redis"
+sed -i -e 's/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c protected-mode no' /etc/redis/redis.conf &>>$LOG_FILE
+VALIDATE $? "Allowing remote connections to Redis" 
 
 systemctl enable redis
 VALIDATE $? "Enabling Redis"
