@@ -46,8 +46,8 @@ fi
 
 mkdir -p /app 
 VALIDATE $? "Creating app directory"
-curl -o /tmp/user.zip https://roboshop-artifacts.s3.amazonaws.com/user-v3.zip  &>>$LOG_FILE
-VALIDATE $? "Downloading user application"
+curl -o /tmp/cart.zip https://roboshop-artifacts.s3.amazonaws.com/cart-v3.zip  &>>$LOG_FILE
+VALIDATE $? "Downloading cart application"
 
 cd /app
 VALIDATE $? "changing app directory"
@@ -55,18 +55,16 @@ VALIDATE $? "changing app directory"
 rm -rf /app/*
 VALIDATE $? "Removing existing code"
 
-unzip /tmp/user.zip  &>>$LOG_FILE
-VALIDATE $? "Unzip user"
+unzip /tmp/cart.zip  &>>$LOG_FILE
+VALIDATE $? "Unzip cart"
 
 npm install  &>>$LOG_FILE
 VALIDATE $? "install dependencies"
 
-cp $SCRIPT_DIR/user.service /etc/systemd/system/user.service
+cp $SCRIPT_DIR/cart.service /etc/systemd/system/cart.service
 VALIDATE $? "copy systemctl service"
 
 systemctl daemon-reload
-systemctl enable user  &>>$LOG_FILE
-VALIDATE $? "Enable user"
+systemctl enable cart  &>>$LOG_FILE
+VALIDATE $? "Enable cart"
 
-systemctl restart user
-VALIDATE $? "restarted user"
