@@ -68,3 +68,7 @@ systemctl daemon-reload
 systemctl enable cart  &>>$LOG_FILE
 VALIDATE $? "Enable cart"
 
+systemctl start cart &>>$LOG_FILE
+VALIDATE $? "Started cart"
+
+
