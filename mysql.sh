@@ -29,14 +29,18 @@ VALIDATE(){ #functions recieve inputs through orgs just like shell script
         echo -e "  $2...$G Success $N" | tee -a $LOG_FILE
     fi
 }
- dnf install mysql-server -y
+ dnf install mysql-server -y &>>$LOG_FILE
  VALIDATE $? "Installing mysql server"
 
- systemctl enable mysqld
+ systemctl enable mysqld &>>$LOG_FILE
  VALIDATE $? "enabling mysql"
 
-systemctl start mysqld
+systemctl start mysqld &>>$LOG_FILE
 VALIDATE $? "started mysql"  
 
-mysql_secure_installation --set-root-pass RoboShop@1
+mysql_secure_installation --set-root-pass RoboShop@1 &>>$LOG_FILE
 VALIDATE $? "setting up root password"
+
+END_TIME=$(date +%s)
+TOTAL_TIME=$(( $END_TIME - $START_TIME ))
+echo -e "Script executed in: $Y $TOTAL_TIME seconds $N"
