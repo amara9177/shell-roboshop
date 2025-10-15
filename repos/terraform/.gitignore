@@ -1,0 +1,12 @@
+# Terraform-generated files and directories
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+*.tfvars.json
+
+# Local environment-specific files (optional, depending on workflow)
+# For example, if you use a specific file for local testing variables:
+local.tfvars
