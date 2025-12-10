@@ -1,0 +1,13 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: roboshop-prod
+  region: us-east-1
+
+managedNodeGroups:
+  - name: roboshop-pod
+    instanceTypes: ["m5.large","t3.small","t3.medium","c5.large"]
+    desiredCapacity: 2
+    spot: true
+
